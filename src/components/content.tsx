@@ -1,3 +1,4 @@
+import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components"
 import { ICategory, IContent } from "../types";
 
@@ -24,11 +25,25 @@ export interface IContentProps {
     id: number;
     title: string;
     isSelected: boolean;
+    index: number;
     onClick: () => void;
 }
 
-export const Content: React.FC<IContentProps> = ({id, title, isSelected, onClick}) => {
+export const Content: React.FC<IContentProps> = ({id, title, isSelected, onClick, index}) => {
     return (
-        <ContentContainer className={isSelected ? 'content-selected' : ''} onClick={onClick}>{title}</ContentContainer>
+        <Draggable draggableId={`content-${id}`} index={index} >
+            {(provided) => {
+                return (
+                    <ContentContainer
+                        className={isSelected ? 'content-selected' : ''}
+                        onClick={onClick}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                    >{title}
+                    </ContentContainer>
+                )
+            }}
+        </Draggable>
     )
 }

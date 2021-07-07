@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { ICategory } from "../types";
+import { Draggable } from 'react-beautiful-dnd';
 
 const CategoryContainer = styled.div`
     width: 100%;
@@ -24,11 +24,27 @@ interface ICategoryProps {
     id: number;
     title: string;
     isSelected: boolean;
+    index: number;
     onClick: () => void;
 }
 
-export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick}) => {
+export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick, index}) => {
     return (
-        <CategoryContainer className={isSelected ? 'category-selected' : ''} onClick={onClick}>{title}</CategoryContainer>
+        <Draggable draggableId={`category - ${id}`} index={index}>
+            {(provided) => {
+                return (
+                    <CategoryContainer
+                        className={isSelected ? 'category-selected' : ''}
+                        onClick={onClick}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                    >
+                        {title}
+                    </CategoryContainer>
+                )
+            }}
+        </Draggable>
+        
     )
 }
