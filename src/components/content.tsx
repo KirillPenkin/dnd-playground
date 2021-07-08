@@ -20,6 +20,11 @@ const ContentContainer = styled.div`
     }
 `;
 
+export const ContentPlaceholder = styled.div`
+    width: 80%;
+    height: 44px;
+`;
+
 export interface IContentProps {
     id: number;
     title: string;
