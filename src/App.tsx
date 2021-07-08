@@ -1,18 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import { categories, content } from './data';
-import { Category } from './components/category';
+import { categoriesData, contentData } from './data';
+import { Category, ICategoryDrop } from './components/category';
 import { Content } from './components/content';
 import { useState } from 'react';
 import { IContent } from './types';
 import { AppContainer, CategoriesContainer, ContentContainer } from './components/inner';
-import { DndProvider } from 'react-dnd';
+import { DndProvider, DropTargetMonitor, XYCoord } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export const App = () => {
 
+  const [categories, setCategories] = useState(categoriesData);
+  const [content, setContent] = useState(contentData);
   const [selected, setSelected] = useState<number | undefined>(undefined);
   const [selectedContent, setSelectedContent] = useState<number[]>([]);
+
+  const [draggingElement, setDraggingElement] = useState<number | undefined>(undefined);
+  const [draggingOver, setDraggingOver] = useState<number | undefined>(undefined);
 
   const selectedCategory = categories.find((category) => category.id === selected);
   const selectedCategoryContent = selectedCategory ? selectedCategory.content.map((contentId) => content.find((item) => item.id === contentId)) as IContent[] : [];
@@ -33,6 +38,10 @@ export const App = () => {
       setSelectedContent(selectedContent.filter((item) => item !== id))
     }
   }
+
+  const onDnDHover = ({isUpperHalf}: ICategoryDrop, monitor: DropTargetMonitor<unknown, unknown>) => {
+    console.log(isUpperHalf);
+  }
   
   return (
     <DndProvider backend={HTML5Backend}>
@@ -40,7 +49,15 @@ export const App = () => {
         <CategoriesContainer>
           {categories.map(({id, title}, index) => {
             const isSelected = id === selected;
-            return <Category id={id} key={id} title={title} isSelected={isSelected} onClick={() => selectCategory(id)} index={index} onMove={() => undefined} />
+            return <Category
+              id={id}
+              key={id}
+              title={title}
+              isSelected={isSelected}
+              onClick={() => selectCategory(id)}
+              index={index}
+              onDnDHover={onDnDHover}
+            />
           })}
         </CategoriesContainer>
         <ContentContainer>
