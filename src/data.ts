@@ -1,6 +1,6 @@
 import { ICategory, IContent } from "./types";
 
-export const categories: ICategory[] = [
+export const categoriesData: ICategory[] = [
     {
       id: 1,
       title: 'Category1',
@@ -23,7 +23,7 @@ export const categories: ICategory[] = [
     },
 ];
   
-export const content: IContent[] = [
+export const contentData: IContent[] = [
     {
         id: 1,
         title: 'Content1',
