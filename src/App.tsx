@@ -67,6 +67,7 @@ export const App = () => {
                 {selectedCategoryContent.map(({id, title}, index) => {
                   return <Content key={id} title={title} id={id} isSelected={selectedContent.includes(id)} onClick={() => selectContent(id)} index={index}/>
                 })}
+                {provided.placeholder}
               </ContentContainer>
             )
           }}
