@@ -6,6 +6,8 @@ import { Content } from './components/content';
 import { useState } from 'react';
 import { IContent } from './types';
 import { AppContainer, CategoriesContainer, ContentContainer } from './components/inner';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export const App = () => {
 
@@ -33,19 +35,21 @@ export const App = () => {
   }
   
   return (
-    <AppContainer>
-      <CategoriesContainer>
-        {categories.map(({id, title}) => {
-          const isSelected = id === selected;
-          return <Category id={id} key={id} title={title} isSelected={isSelected} onClick={() => selectCategory(id)} />
-        })}
-      </CategoriesContainer>
-      <ContentContainer>
-        {selectedCategoryContent.map(({id, title}) => {
-          return <Content key={id} title={title} id={id} isSelected={selectedContent.includes(id)} onClick={() => selectContent(id)} />
-        })}
-      </ContentContainer>
-    </AppContainer>
+    <DndProvider backend={HTML5Backend}>
+      <AppContainer>
+        <CategoriesContainer>
+          {categories.map(({id, title}, index) => {
+            const isSelected = id === selected;
+            return <Category id={id} key={id} title={title} isSelected={isSelected} onClick={() => selectCategory(id)} index={index} onMove={() => undefined} />
+          })}
+        </CategoriesContainer>
+        <ContentContainer>
+          {selectedCategoryContent.map(({id, title}) => {
+            return <Content key={id} title={title} id={id} isSelected={selectedContent.includes(id)} onClick={() => selectContent(id)} />
+          })}
+        </ContentContainer>
+      </AppContainer>
+    </DndProvider>
   );
 }
 

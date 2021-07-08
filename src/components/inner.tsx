@@ -17,3 +17,8 @@ export const ContentContainer = styled.div`
   width: 70%;
   height: 100%;
 `;
+
+export enum ObjectTypes {
+  CATEGORY = 'CATEGORY',
+  CONTENT = 'CONTENT',
+}
