@@ -4,7 +4,7 @@ import { Category } from './components/category';
 import { Content } from './components/content';
 import { useState } from 'react';
 import { IContent } from './types';
-import { DragDropContext, DropResult, ResponderProvided, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, ResponderProvided, Droppable, DragStart } from 'react-beautiful-dnd';
 import { AppContainer, CategoriesContainer, ContentContainer } from './components/inner'
 
 export const App = () => {
@@ -34,13 +34,21 @@ export const App = () => {
 
   const onDragEnd = (result: DropResult, responder: ResponderProvided) => {
     console.log(result);
-    console.log(responder);
+    // console.log(responder);
+  }
+
+  const onDragStart = (initial: DragStart, provided: ResponderProvided) => {
+    // console.log('drag_start');
+    console.log(initial);
+    // console.log(provided)
   }
   
   return (
-    <DragDropContext onDragEnd={onDragEnd} onDragStart={(initial, provided) => {console.log('drag_start'); console.log(initial); console.log(provided)}}>
+    <DragDropContext
+      onDragEnd={onDragEnd}
+      onDragStart={onDragStart}>
       <AppContainer>
-        <Droppable droppableId="categories" isCombineEnabled={true}>
+        <Droppable droppableId="categories" isCombineEnabled={true} >
           {(provided) => {
             return (
               <CategoriesContainer
@@ -49,7 +57,7 @@ export const App = () => {
               >
                 {categories.map(({id, title}, index) => {
                   const isSelected = id === selected;
-                  return <Category id={id} key={id} title={title} isSelected={isSelected} index={index} onClick={() => selectCategory(id)} />
+                  return <Category id={id} key={id} title={title} isSelected={isSelected} index={index} onClick={() => selectCategory(id)} isCombination={true} />
                 })}
                 {provided.placeholder}
               </CategoriesContainer>
