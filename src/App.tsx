@@ -36,17 +36,22 @@ export const App = () => {
   }
 
   const [isCombination, setCombination] = useState(false);
+  const [draggingContentElement, setDraggingContentElement] = useState<string | undefined>(undefined);
 
   const onDragEnd = (result: DropResult, responder: ResponderProvided) => {
     console.log(result);
     setCombination(false);
+    setDraggingContentElement(undefined);
   }
 
   const onDragStart = (initial: DragStart, provided: ResponderProvided) => {
     const {droppableId} = initial.source;
     const isCombination = contentDroppableId === droppableId;
     setCombination(isCombination);
-    console.log(isCombination);
+    console.log(initial);
+
+    const draggingElement = initial.draggableId;
+    setDraggingContentElement(draggingElement);
   }
   
   return (
@@ -100,6 +105,7 @@ export const App = () => {
                       onClick={() => selectContent(id)}
                       index={index}
                       draggableId={draggableId}
+                      isDragging={draggingContentElement === draggableId}
                     />)
                 })}
                 {provided.placeholder}

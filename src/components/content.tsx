@@ -27,10 +27,11 @@ export interface IContentProps {
     isSelected: boolean;
     index: number;
     draggableId: string;
+    isDragging: boolean;
     onClick: () => void;
 }
 
-export const Content: React.FC<IContentProps> = ({id, title, isSelected, onClick, index, draggableId}) => {
+export const Content: React.FC<IContentProps> = ({id, title, isSelected, onClick, index, draggableId, isDragging}) => {
     return (
         <Draggable draggableId={draggableId} index={index} >
             {(provided) => {
@@ -41,7 +42,7 @@ export const Content: React.FC<IContentProps> = ({id, title, isSelected, onClick
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
-                    >{title}
+                    >{`${title} - ${isDragging}`}
                     </ContentContainer>
                 )
             }}
