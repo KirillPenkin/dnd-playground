@@ -4,8 +4,11 @@ import { Category } from './components/category';
 import { Content } from './components/content';
 import { useState } from 'react';
 import { IContent } from './types';
-import { DragDropContext, DropResult, ResponderProvided, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, ResponderProvided, Droppable, DragStart } from 'react-beautiful-dnd';
 import { AppContainer, CategoriesContainer, ContentContainer } from './components/inner'
+
+const categoriesDroppableId = 'categories';
+const contentDroppableId = 'content';
 
 export const App = () => {
 
@@ -34,13 +37,21 @@ export const App = () => {
 
   const onDragEnd = (result: DropResult, responder: ResponderProvided) => {
     console.log(result);
-    console.log(responder);
+    // console.log(responder);
+  }
+
+  const onDragStart = (initial: DragStart, provided: ResponderProvided) => {
+    // console.log('drag_start');
+    console.log(initial);
+    // console.log(provided)
   }
   
   return (
-    <DragDropContext onDragEnd={onDragEnd} onDragStart={(initial, provided) => {console.log('drag_start'); console.log(initial); console.log(provided)}}>
+    <DragDropContext
+      onDragEnd={onDragEnd}
+      onDragStart={onDragStart}>
       <AppContainer>
-        <Droppable droppableId="categories" isCombineEnabled={true}>
+        <Droppable droppableId={categoriesDroppableId} isCombineEnabled={true} >
           {(provided) => {
             return (
               <CategoriesContainer
@@ -49,7 +60,17 @@ export const App = () => {
               >
                 {categories.map(({id, title}, index) => {
                   const isSelected = id === selected;
-                  return <Category id={id} key={id} title={title} isSelected={isSelected} index={index} onClick={() => selectCategory(id)} />
+                  const draggableId = `category-${id}`;
+                  return (
+                    <Category
+                      id={id}
+                      key={id}
+                      title={title}
+                      isSelected={isSelected}
+                      index={index}
+                      onClick={() => selectCategory(id)}
+                      draggableId={draggableId}
+                    />)
                 })}
                 {provided.placeholder}
               </CategoriesContainer>
@@ -57,7 +78,7 @@ export const App = () => {
           }}
         </Droppable>
 
-        <Droppable droppableId="content">
+        <Droppable droppableId={contentDroppableId}>
           {(provided) => {
             return (
               <ContentContainer
@@ -65,7 +86,17 @@ export const App = () => {
                 {...provided.droppableProps}
               >
                 {selectedCategoryContent.map(({id, title}, index) => {
-                  return <Content key={id} title={title} id={id} isSelected={selectedContent.includes(id)} onClick={() => selectContent(id)} index={index}/>
+                  const draggableId = `content-${id}`;
+                  return (
+                    <Content
+                      key={id}
+                      title={title}
+                      id={id}
+                      isSelected={selectedContent.includes(id)}
+                      onClick={() => selectContent(id)}
+                      index={index}
+                      draggableId={draggableId}
+                    />)
                 })}
                 {provided.placeholder}
               </ContentContainer>

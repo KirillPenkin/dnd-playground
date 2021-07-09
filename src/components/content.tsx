@@ -26,12 +26,13 @@ export interface IContentProps {
     title: string;
     isSelected: boolean;
     index: number;
+    draggableId: string;
     onClick: () => void;
 }
 
-export const Content: React.FC<IContentProps> = ({id, title, isSelected, onClick, index}) => {
+export const Content: React.FC<IContentProps> = ({id, title, isSelected, onClick, index, draggableId}) => {
     return (
-        <Draggable draggableId={`content-${id}`} index={index} >
+        <Draggable draggableId={draggableId} index={index} >
             {(provided) => {
                 return (
                     <ContentContainer

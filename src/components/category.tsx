@@ -25,12 +25,13 @@ interface ICategoryProps {
     title: string;
     isSelected: boolean;
     index: number;
+    draggableId: string;
     onClick: () => void;
 }
 
-export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick, index}) => {
+export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick, index, draggableId}) => {
     return (
-        <Draggable draggableId={`category - ${id}`} index={index}>
+        <Draggable draggableId={draggableId} index={index}>
             {(provided) => {
                 return (
                     <CategoryContainer
