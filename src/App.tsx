@@ -39,8 +39,7 @@ export const App = () => {
     }
   }
 
-  const onDnDHover = ({isUpperHalf}: ICategoryDrop, monitor: DropTargetMonitor<unknown, unknown>) => {
-    console.log(isUpperHalf);
+  const onDnDHover = ({}: ICategoryDrop, monitor: DropTargetMonitor<unknown, unknown>) => {
   }
   
   return (

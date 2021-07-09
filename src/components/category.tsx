@@ -48,7 +48,6 @@ interface ICategoryDrag {
     id: number;
     index: number;
     ref: RefObject<HTMLDivElement>;
-    isUpperHalf: boolean;
 }
 export interface ICategoryDrop extends IHaveType, ICategoryDrag { }
 
@@ -71,11 +70,7 @@ export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onCli
         };
       },
 
-      hover: (item: ICategoryDrop, monitor: DropTargetMonitor) => onDnDHover(item, monitor),
-      drop: (item: ICategoryDrop, monitor: DropTargetMonitor) => undefined,
-    });
-
-    const makeItem = (monitor: DragSourceMonitor<any>): ICategoryDrag => {
+      hover: (item: ICategoryDrop, monitor: DropTargetMonitor) => {
 
         const hoverBoundingRect = ref.current?.getBoundingClientRect() as DOMRect;
         const halfHight = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -83,11 +78,23 @@ export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onCli
         const relativeMousePosition = (mousePosition as XYCoord).y - hoverBoundingRect.top;
         const isUpperHalf = relativeMousePosition < halfHight;
 
+        console.log(isUpperHalf);
+
+        console.log(`item index ${item.index}`)
+        console.log(`index ${index}`);
+
+        onDnDHover(item, monitor)
+
+      },
+      drop: (item: ICategoryDrop, monitor: DropTargetMonitor) => undefined,
+    });
+
+    const makeItem = (monitor: DragSourceMonitor<any>): ICategoryDrag => {
+
         return {
             id,
             index,
             ref,
-            isUpperHalf,
         };
     }
 
