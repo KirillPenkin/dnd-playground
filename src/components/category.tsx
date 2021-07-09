@@ -1,9 +1,7 @@
 import styled from "styled-components"
-import { ICategory } from "../types";
 import { useDrag, useDrop, DropTargetMonitor, XYCoord, DragSourceMonitor } from 'react-dnd';
 import { ObjectTypes } from "./inner";
 import { RefObject, useRef } from "react";
-import { Identifier } from "typescript";
 
 const CategoryContainer = styled.div`
     width: 100%;
@@ -48,7 +46,7 @@ interface ICategoryDrag {
 }
 export interface ICategoryDrop extends IHaveType, ICategoryDrag { }
 
-interface IDragValues {
+export interface IDragValues {
     isDragging: boolean;
 }
 

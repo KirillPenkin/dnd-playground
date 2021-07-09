@@ -80,8 +80,8 @@ export const App = () => {
           })}
         </CategoriesContainer>
         <ContentContainer>
-          {selectedCategoryContent.map(({id, title}) => {
-            return <Content key={id} title={title} id={id} isSelected={selectedContent.includes(id)} onClick={() => selectContent(id)} />
+          {selectedCategoryContent.map(({id, title}, index) => {
+            return <Content key={id} title={title} id={id} isSelected={selectedContent.includes(id)} onClick={() => selectContent(id)} index={index} />
           })}
         </ContentContainer>
       </AppContainer>
