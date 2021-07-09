@@ -26,20 +26,33 @@ interface ICategoryProps {
     isSelected: boolean;
     index: number;
     draggableId: string;
+    isCombination: boolean;
     onClick: () => void;
 }
 
-export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick, index, draggableId}) => {
+const combinationStyle = {
+    transform: 'translate(0px, 0px)',
+}
+
+export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick, index, draggableId, isCombination}) => {
+    console.log(isCombination);
     return (
         <Draggable draggableId={draggableId} index={index}>
             {(provided) => {
+                const {draggableProps, dragHandleProps} = provided;
+
+                if (isCombination && draggableProps.style?.transform) {
+                    draggableProps.style.transform = 'translate(0px, 0px)';
+                }
+                
                 return (
                     <CategoryContainer
                         className={isSelected ? 'category-selected' : ''}
                         onClick={onClick}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
+                        {...draggableProps}
+                        {...dragHandleProps}
                         ref={provided.innerRef}
+                        // style={isCombination ? combinationStyle : {}}
                     >
                         {title}
                     </CategoryContainer>

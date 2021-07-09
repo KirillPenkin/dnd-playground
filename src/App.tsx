@@ -35,15 +35,18 @@ export const App = () => {
     }
   }
 
+  const [isCombination, setCombination] = useState(false);
+
   const onDragEnd = (result: DropResult, responder: ResponderProvided) => {
     console.log(result);
-    // console.log(responder);
+    setCombination(false);
   }
 
   const onDragStart = (initial: DragStart, provided: ResponderProvided) => {
-    // console.log('drag_start');
-    console.log(initial);
-    // console.log(provided)
+    const {droppableId} = initial.source;
+    const isCombination = contentDroppableId === droppableId;
+    setCombination(isCombination);
+    console.log(isCombination);
   }
   
   return (
@@ -51,7 +54,7 @@ export const App = () => {
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}>
       <AppContainer>
-        <Droppable droppableId={categoriesDroppableId} isCombineEnabled={true} >
+        <Droppable droppableId={categoriesDroppableId} isCombineEnabled={isCombination} >
           {(provided) => {
             return (
               <CategoriesContainer
@@ -70,6 +73,7 @@ export const App = () => {
                       index={index}
                       onClick={() => selectCategory(id)}
                       draggableId={draggableId}
+                      isCombination={isCombination}
                     />)
                 })}
                 {provided.placeholder}
