@@ -24,11 +24,6 @@ const CategoryContainer = styled.div`
     }
 `;
 
-export const CategoryPlaceholder = styled.div`
-    width: 100%;
-    height: 44px;
-`;
-
 export type MoveHandeler = (dragIndex: number, hoverIndex: number, isUpperElementHalf: boolean) => void;
 
 interface ICategoryProps {
@@ -37,7 +32,9 @@ interface ICategoryProps {
     isSelected: boolean;
     index: number;
     onClick: () => void;
-    onDnDHover: (item: ICategoryDrop, monitor: DropTargetMonitor) => void;
+    // onDnDHover: (item: ICategoryDrop, monitor: DropTargetMonitor) => void;
+    onDnDHover: (draggingIndex: number, dragOverIndex: number, isUpperHalf: boolean) => void;
+    setDraggingItem: (id: number | undefined) => void;
 }
 
 interface IHaveType {
@@ -59,7 +56,7 @@ interface IDropValues {
     handlerId:  any;
 }
 
-export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick, index, onDnDHover}) => {
+export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onClick, index, onDnDHover, setDraggingItem}) => {
     
     const ref = useRef<HTMLDivElement>(null);
     const [{ handlerId }, drop] = useDrop({
@@ -78,19 +75,19 @@ export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onCli
         const relativeMousePosition = (mousePosition as XYCoord).y - hoverBoundingRect.top;
         const isUpperHalf = relativeMousePosition < halfHight;
 
-        console.log(isUpperHalf);
+        const draggingIndex = item.index;
+        const dragOverIndex = index;
 
-        console.log(`item index ${item.index}`)
-        console.log(`index ${index}`);
-
-        onDnDHover(item, monitor)
+        onDnDHover(draggingIndex, dragOverIndex, isUpperHalf);
 
       },
-      drop: (item: ICategoryDrop, monitor: DropTargetMonitor) => undefined,
+      drop: (item: ICategoryDrop, monitor: DropTargetMonitor) => {
+          setDraggingItem(undefined);
+      },
     });
 
     const makeItem = (monitor: DragSourceMonitor<any>): ICategoryDrag => {
-
+        setDraggingItem(id);
         return {
             id,
             index,
@@ -116,7 +113,13 @@ export const Category: React.FC<ICategoryProps> = ({id, title, isSelected, onCli
             onClick={onClick}
             ref={ref}
         >
-            {title}
+            {`${index} ${title}`}
         </CategoryContainer>
     )
+}
+
+export const CategoryPlaceholder: React.FC = () => {
+    return (
+        <CategoryContainer>Placeholder</CategoryContainer>
+    );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { categoriesData, contentData } from './data';
-import { Category, ICategoryDrop } from './components/category';
+import { Category, CategoryPlaceholder, ICategoryDrop } from './components/category';
 import { Content } from './components/content';
 import { useState } from 'react';
 import { IContent } from './types';
@@ -17,7 +17,7 @@ export const App = () => {
   const [selectedContent, setSelectedContent] = useState<number[]>([]);
 
   const [draggingElement, setDraggingElement] = useState<number | undefined>(undefined);
-  const [draggingOver, setDraggingOver] = useState<number | undefined>(undefined);
+  const [draggingPreviewPosition, setDraggingPreviewPosition] = useState<number | undefined>(undefined);
 
   const selectedCategory = categories.find((category) => category.id === selected);
   const selectedCategoryContent = selectedCategory ? selectedCategory.content.map((contentId) => content.find((item) => item.id === contentId)) as IContent[] : [];
@@ -39,24 +39,44 @@ export const App = () => {
     }
   }
 
-  const onDnDHover = ({}: ICategoryDrop, monitor: DropTargetMonitor<unknown, unknown>) => {
+  const onDnDHover = (draggingIndex: number, dragOverIndex: number, isUpperHalf: boolean) => {
+    const isTheSameElement = draggingIndex === dragOverIndex;
+
+    if (isTheSameElement) {
+      setDraggingPreviewPosition(draggingIndex);
+    } else {
+      if (isUpperHalf) {
+        setDraggingPreviewPosition(dragOverIndex);
+      } else {
+        setDraggingPreviewPosition(dragOverIndex + 1);
+      }
+    }
   }
   
   return (
     <DndProvider backend={HTML5Backend}>
       <AppContainer>
+        {`Dragging element ${draggingElement}`}
+        {`Preview position ${draggingPreviewPosition}`}
         <CategoriesContainer>
           {categories.map(({id, title}, index) => {
             const isSelected = id === selected;
-            return <Category
-              id={id}
-              key={id}
-              title={title}
-              isSelected={isSelected}
-              onClick={() => selectCategory(id)}
-              index={index}
-              onDnDHover={onDnDHover}
-            />
+            const isPreviewPosition = index === draggingPreviewPosition;
+            return (
+              <>
+                {!!draggingElement && isPreviewPosition && <CategoryPlaceholder /> }
+                <Category
+                  id={id}
+                  key={id}
+                  title={title}
+                  isSelected={isSelected}
+                  onClick={() => selectCategory(id)}
+                  index={index}
+                  onDnDHover={onDnDHover}
+                  setDraggingItem={setDraggingElement}
+                />
+              </>
+            ) 
           })}
         </CategoriesContainer>
         <ContentContainer>
